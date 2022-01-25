@@ -1,6 +1,6 @@
-# HTTP-Server
+# HTTP-httpserver.Server
 
-An HTTP-Server built using Java
+An HTTP-httpserver.Server built using Java
 
 ## Instructions
 

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="HelloWorldTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2022-01-20T22:30:10" hostname="Nadias-MBP.home" time="0.017">
-  <properties/>
-  <testcase name="sayHello()" classname="HelloWorldTest" time="0.015"/>
-  <testcase name="main()" classname="HelloWorldTest" time="0.001"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
