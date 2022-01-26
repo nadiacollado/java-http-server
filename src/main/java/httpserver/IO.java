@@ -10,6 +10,7 @@ public class IO {
     static PrintWriter writer;
     static BufferedReader reader;
 
+
     public static void buildIOStream(Socket clientSocket) throws IOException {
         createWriter(clientSocket);
         createReader(clientSocket);
