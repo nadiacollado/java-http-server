@@ -7,7 +7,7 @@ group 'org.example'
 version '1.0-SNAPSHOT'
 
 application {
-    mainClassName = 'httpserver.RunServer'
+    mainClassName = 'httpserver.server.RunServer'
 }
 
 repositories {
