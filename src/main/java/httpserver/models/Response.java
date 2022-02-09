@@ -10,8 +10,8 @@ public class Response {
 
     public Response() {}
 
-    public Response(String protocol, String statusCode, HashMap<String, String> headers, String body) {
-        this.protocol = protocol;
+    public Response(String statusCode, HashMap<String, String> headers, String body) {
+        this.protocol = "HTTP/1.1";
         this.statusCode = statusCode;
         this.headers = headers;
         this.body = body;

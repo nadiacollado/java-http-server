@@ -9,28 +9,36 @@ public class ResponseWriter implements IResponseWriter {
 
     public Response build(Request request) {
         ResponseBuilder responseBuilder = new ResponseBuilder();
-        setStatusLine("HTTP/1.1", "200 OK", responseBuilder);
-        setHeaders(responseBuilder);
-        if (request.path != null && request.path.equals("/simple_get_with_body")){
+        if (request.path.equals("/simple_get")) {
+            setStatusCode("200 OK", responseBuilder);
+        } else if (request.path.equals("/simple_get_with_body")){
+            setStatusCode("200 OK", responseBuilder);
             setBody(responseBuilder, "Hello world");
+        } else {
+            setStatusCode("404 Not Found", responseBuilder);
+            return responseBuilder.build();
         }
+        setHeaders(responseBuilder);
         return responseBuilder.build();
     }
 
     public String formatResponse(Response response) {
         String formattedResponse;
+        String statusLine = getStatusLine(response);
         if (response.body == null) {
-            formattedResponse = response.protocol + " " + response.statusCode + LINE_BREAK;
+            formattedResponse = statusLine;
         } else {
-            formattedResponse = response.protocol + " " + response.statusCode + LINE_BREAK + response.body;
+            formattedResponse = statusLine + response.body;
         }
         return formattedResponse;
     }
 
-    public void setStatusLine(String protocol, String statusCode, ResponseBuilder responseBuilder) {
-        responseBuilder
-                .setProtocol(protocol)
-                .setStatusCode(statusCode);
+    public void setStatusCode(String statusCode, ResponseBuilder responseBuilder) {
+        responseBuilder.setStatusCode(statusCode);
+    }
+
+    public String getStatusLine(Response response) {
+        return response.protocol + " " + response.statusCode + LINE_BREAK;
     }
 
     public void setHeaders(ResponseBuilder responseBuilder) {
