@@ -4,8 +4,12 @@ import httpserver.interfaces.IResponseWriter;
 import httpserver.mocks.MockResponseWriter;
 import httpserver.models.Request;
 import httpserver.models.Response;
+import httpserver.utils.Methods;
+import httpserver.utils.StatusCodes;
+import httpserver.utils.constants;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,19 +18,19 @@ public class ResponseWriterTest {
     @Test
     public void returnsASuccessStatusCodeInResponse() {
         IResponseWriter responseWriter = new ResponseWriter();
-        Request request = new Request("GET","/simple_get", "HTTP/1.1", null, null);
+        Request request = new Request(Methods.GET,"/simple_get", constants.PROTOCOL, null, null);
 
-        Response response = responseWriter.build(request);
+        Response response = responseWriter.buildSuccessResponse(request);
 
-        assertEquals("200 OK", response.statusCode);
+        assertEquals(StatusCodes.SUCCESS, response.statusCode);
     }
 
     @Test
     public void returnsEmptyBodyInResponse() {
         IResponseWriter responseWriter = new ResponseWriter();
-        Request request = new Request("GET","/simple_get", "HTTP/1.1", null, null);
+        Request request = new Request(Methods.GET,"/simple_get", constants.PROTOCOL, null, null);
 
-        Response response = responseWriter.build(request);
+        Response response = responseWriter.buildSuccessResponse(request);
 
         assertEquals(null, response.body);
     }
@@ -36,9 +40,9 @@ public class ResponseWriterTest {
         IResponseWriter responseWriter = new ResponseWriter();
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "text/html");
-        Request request = new Request("GET","/simple_get", "HTTP/1.1", headers, null);
+        Request request = new Request(Methods.GET,"/simple_get", constants.PROTOCOL, null, null);
 
-        Response response = responseWriter.build(request);
+        Response response = responseWriter.buildSuccessResponse(request);
 
         assertEquals(headers, response.headers);
     }
@@ -46,10 +50,8 @@ public class ResponseWriterTest {
     @Test
     public void createsFormattedResponse() {
         ResponseWriter responseWriter = new ResponseWriter();
-        Response response = new Response();
+        Response response = new Response(StatusCodes.SUCCESS, null, null);
         String statusLine = "HTTP/1.1 200 OK\r\n\r\n";
-        response.protocol = "HTTP/1.1";
-        response.statusCode = "200 OK";
         String formattedResponse = responseWriter.formatResponse(response);
 
         assertEquals(statusLine, formattedResponse);
@@ -58,10 +60,10 @@ public class ResponseWriterTest {
     @Test
     public void returnsA404ResponseAPageThatDoesNotExist() {
         ResponseWriter responseWriter = new ResponseWriter();
-        Request request = new Request("GET","/does_not_exist", "HTTP/1.1", null, null);
+        Request request = new Request(Methods.GET,"/does_not_exist", constants.PROTOCOL, null, null);
 
-        Response response = responseWriter.build(request);
+        Response response = responseWriter.buildPageNotFoundResponse(request);
 
-        assertEquals("404 Not Found", response.statusCode);
+        assertEquals(StatusCodes.PAGE_NOT_FOUND, response.statusCode);
     }
 }
