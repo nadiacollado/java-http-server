@@ -9,8 +9,6 @@ public class Request {
     public HashMap<String, String> headers;
     public String body;
 
-    public Request() {}
-
     public Request(String method, String path, String protocol, HashMap<String, String> headers, String body) {
         this.method = method;
         this.path = path;

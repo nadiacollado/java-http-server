@@ -5,13 +5,18 @@ import httpserver.models.Request;
 import httpserver.models.Response;
 
 public class MockResponseWriter implements IResponseWriter {
-    public boolean buildCalled = false;
+    public boolean buildSuccessResponseCalled = false;
     public boolean formatResponseCalled = false;
 
     @Override
-    public Response build(Request request) {
-        buildCalled = true;
-        return new Response();
+    public Response buildSuccessResponse(Request request){
+        buildSuccessResponseCalled = true;
+        return new Response(null, null, null);
+    }
+
+    @Override
+    public Response buildPageNotFoundResponse(Request request){
+        return new Response(null, null, null);
     }
 
     @Override
@@ -20,8 +25,8 @@ public class MockResponseWriter implements IResponseWriter {
         return response.protocol + " " + response.statusCode;
     }
 
-    public boolean wasBuildCalled() {
-        return buildCalled;
+    public boolean wasBuildSuccessResponseCalled() {
+        return buildSuccessResponseCalled;
     }
     public boolean wasFormatResponseCalled() {
         return formatResponseCalled;

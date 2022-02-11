@@ -6,6 +6,7 @@ import httpserver.models.Response;
 import java.io.IOException;
 
 public interface IResponseWriter {
-    Response build(Request request);
     String formatResponse(Response response) throws IOException;
+    Response buildSuccessResponse(Request request);
+    Response buildPageNotFoundResponse(Request request);
 }

@@ -1,10 +1,12 @@
-package httpserver;
+package httpserver.server;
 
 import httpserver.interfaces.IRequestParser;
 import httpserver.interfaces.IResponseWriter;
+import httpserver.interfaces.IRouter;
 import httpserver.interfaces.ISocketHandler;
 import httpserver.models.Request;
 import httpserver.models.Response;
+import httpserver.router.Router;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -15,10 +17,12 @@ public class SocketHandler implements ISocketHandler {
     Socket clientSocket;
     IRequestParser requestParser;
     IResponseWriter responseWriter;
+    IRouter router;
 
-    public SocketHandler(IRequestParser requestParser, IResponseWriter responseWriter){
+    public SocketHandler(IRequestParser requestParser, IResponseWriter responseWriter, IRouter router){
         this.requestParser = requestParser;
         this.responseWriter = responseWriter;
+        this.router = router;
     }
 
     public void connectSockets(int port) throws IOException {
@@ -51,7 +55,12 @@ public class SocketHandler implements ISocketHandler {
     }
 
     public Response processServerResponse(Request request) {
-        Response response = responseWriter.build(request);
+        Response response;
+        if (router.isRequestValid(request)) {
+            response = responseWriter.buildSuccessResponse(request);
+            return response;
+        }
+        response = responseWriter.buildPageNotFoundResponse(request);
         return response;
     }
 

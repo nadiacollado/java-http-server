@@ -1,6 +1,8 @@
 package httpserver.request;
 
 import httpserver.models.Request;
+import httpserver.utils.Methods;
+import httpserver.utils.constants;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
@@ -29,9 +31,9 @@ public class RequestParserTest {
         RequestParser handler = new RequestParser();
         Request formattedRequest = handler.parse(requestStream);
 
-        assertEquals("GET", formattedRequest.method);
+        assertEquals(Methods.GET, formattedRequest.method);
         assertEquals("/simple_get_with_body", formattedRequest.path);
-        assertEquals("HTTP/1.1", formattedRequest.protocol);
+        assertEquals(constants.PROTOCOL, formattedRequest.protocol);
         assertEquals(headers, formattedRequest.headers);
         assertNull(formattedRequest.body);
     }

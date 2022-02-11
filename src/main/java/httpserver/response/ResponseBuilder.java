@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 public class ResponseBuilder {
     private String statusCode;
-    private String protocol;
     private HashMap<String, String> headers;
     private String body;
 
@@ -15,12 +14,7 @@ public class ResponseBuilder {
     }
 
     public Response build() {
-        return new Response(protocol, statusCode, headers, body);
-    }
-
-    public ResponseBuilder setProtocol(String protocol) {
-        this.protocol = protocol;
-        return this;
+        return new Response(statusCode, headers, body);
     }
 
     public ResponseBuilder setStatusCode(String statusCode) {

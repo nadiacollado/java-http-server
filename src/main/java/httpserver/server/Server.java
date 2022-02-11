@@ -17,6 +17,5 @@ public class Server {
         } catch (IOException e) {
             System.out.println("Cannot connect sockets");
         }
-
     }
 }
