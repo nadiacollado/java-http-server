@@ -19,6 +19,10 @@ public class MockRouter implements IRouter {
         return true;
     }
 
+    public String[] getMethods(Request request) {
+        return null;
+    }
+
     public boolean wasAddRoutesCalled() {
         return addRoutesCalled;
     }

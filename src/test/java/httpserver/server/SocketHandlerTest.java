@@ -1,22 +1,19 @@
 package httpserver.server;
 
-import httpserver.interfaces.IRouter;
 import httpserver.mocks.MockOutputStream;
 import httpserver.mocks.MockRequestParser;
 import httpserver.mocks.MockResponseWriter;
 import httpserver.mocks.MockRouter;
 import httpserver.models.Request;
 import httpserver.models.Response;
-import httpserver.router.Router;
-import httpserver.server.SocketHandler;
+import httpserver.utils.Methods;
 import httpserver.utils.StatusCodes;
+import httpserver.utils.Constants;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,7 +25,7 @@ class SocketHandlerTest {
         MockResponseWriter mockResponseWriter = new MockResponseWriter();
         MockRouter mockRouter = new MockRouter();
         SocketHandler socketHandler = new SocketHandler(mockRequestParser, mockResponseWriter, mockRouter);
-        String startLine = "GET /simple_get_with_body HTTP/1.1";
+        String startLine = String.format("%s %s %s", Methods.GET, "simple_get_with_body", Constants.PROTOCOL);
         InputStream inputStream = new ByteArrayInputStream(startLine.getBytes());
 
         socketHandler.processClientRequests(inputStream);
@@ -42,7 +39,7 @@ class SocketHandlerTest {
         MockResponseWriter mockResponseWriter = new MockResponseWriter();
         MockRouter mockRouter = new MockRouter();
         SocketHandler socketHandler = new SocketHandler(mockRequestParser, mockResponseWriter, mockRouter);
-        String startLine = "GET /simple_get_with_body HTTP/1.1";
+        String startLine = String.format("%s %s %s", Methods.GET, "simple_get_with_body", Constants.PROTOCOL);
         InputStream inputStream = new ByteArrayInputStream(startLine.getBytes());
 
         Request request = socketHandler.processClientRequests(inputStream);
@@ -57,13 +54,13 @@ class SocketHandlerTest {
         MockResponseWriter mockResponseWriter = new MockResponseWriter();
         MockRouter mockRouter = new MockRouter();
         SocketHandler socketHandler = new SocketHandler(mockRequestParser, mockResponseWriter, mockRouter);
-        String startLine = "GET /simple_get_with_body HTTP/1.1";
+        String startLine = String.format("%s %s %s", Methods.GET, "simple_get_with_body", Constants.PROTOCOL);
         InputStream inputStream = new ByteArrayInputStream(startLine.getBytes());
 
         Request request = socketHandler.processClientRequests(inputStream);
         Response response = socketHandler.processServerResponse(request);
 
-        assertTrue(mockResponseWriter.wasBuildSuccessResponseCalled());
+        assertTrue(mockResponseWriter.wasBuildSuccessResponseWithMethodsCalled());
         assertNotNull(response);
     }
 
