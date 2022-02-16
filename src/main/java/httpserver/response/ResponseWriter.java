@@ -13,13 +13,13 @@ public class ResponseWriter implements IResponseWriter {
         if (request.path.equals("/simple_get_with_body")) {
             response = new ResponseBuilder()
                     .setStatusCode(StatusCodes.SUCCESS)
-                    .addHeader("Allow", methods)
+                    .addHeader(Constants.ALLOW, methods)
                     .setBody("Hello world")
                     .build();
         } else {
             response = new ResponseBuilder()
                     .setStatusCode(StatusCodes.SUCCESS)
-                    .addHeader("Allow", methods)
+                    .addHeader(Constants.ALLOW, methods)
                     .build();
         }
         return response;
@@ -28,6 +28,14 @@ public class ResponseWriter implements IResponseWriter {
     public Response buildPageNotFoundResponse(Request request) {
         Response response = new ResponseBuilder()
                 .setStatusCode(StatusCodes.PAGE_NOT_FOUND)
+                .build();
+        return response;
+    }
+
+    public Response buildMethodNotAllowedResponse(Request request, String[] methods) {
+        Response response = new ResponseBuilder()
+                .setStatusCode(StatusCodes.METHOD_NOT_ALLOWED)
+                .addHeader(Constants.ALLOW, methods)
                 .build();
         return response;
     }
@@ -57,9 +65,9 @@ public class ResponseWriter implements IResponseWriter {
 
     public String stringifyHeaders(Response response) {
         StringBuilder formattedHeaders = new StringBuilder();
-        formattedHeaders.append("Allow: ");
+        formattedHeaders.append(Constants.ALLOW + ": ");
 
-        String[] methodsList = response.headers.get("Allow");
+        String[] methodsList = response.headers.get(Constants.ALLOW);
         for (int i = 0; i < methodsList.length; i++) {
             formattedHeaders.append(methodsList[i]);
             if (i < (methodsList.length - 1)) {

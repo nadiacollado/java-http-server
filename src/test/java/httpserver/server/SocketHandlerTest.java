@@ -60,7 +60,7 @@ class SocketHandlerTest {
         Request request = socketHandler.processClientRequests(inputStream);
         Response response = socketHandler.processServerResponse(request);
 
-        assertTrue(mockResponseWriter.wasBuildSuccessResponseWithMethodsCalled());
+        assertTrue(mockResponseWriter.wasBuildSuccessResponseCalled());
         assertNotNull(response);
     }
 

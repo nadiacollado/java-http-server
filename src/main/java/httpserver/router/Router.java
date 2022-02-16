@@ -19,25 +19,26 @@ public class Router implements IRouter {
 
         routes.put("/simple_get", new String[]{Methods.GET, Methods.HEAD});
         routes.put("/simple_get_with_body", new String[]{Methods.GET});
-        routes.put("/head_request", new String[]{Methods.HEAD});
+        routes.put("/head_request", new String[]{Methods.HEAD, Methods.OPTIONS});
         routes.put("/method_options", new String[]{Methods.GET, Methods.HEAD, Methods.OPTIONS});
         routes.put("/method_options2", new String[]{Methods.GET, Methods.HEAD, Methods.OPTIONS, Methods.POST, Methods.PUT});
         return routes;
     }
 
-    public boolean isRequestValid(Request request) {
-        if (routes.containsKey(request.path)) {
-            String[] methodsForPath = routes.get(request.path);
-            for (int i = 0; i < methodsForPath.length; i++) {
-                if (methodsForPath[i].equals(request.method)) {
-                    return true;
-                }
+    public String[] getMethods(Request request) {
+        return routes.get(request.path);
+    }
+
+    public boolean isPathValid(Request request) {
+        return routes.containsKey(request.path);
+    }
+
+    public boolean isMethodValid(Request request, String[] methods) {
+        for (String method : methods) {
+            if (method.equals(request.method)) {
+                return true;
             }
         }
         return false;
-    }
-
-    public String[] getMethods(Request request) {
-        return routes.get(request.path);
     }
 }

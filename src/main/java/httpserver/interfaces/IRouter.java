@@ -6,6 +6,7 @@ import java.util.Map;
 
 public interface IRouter {
     Map<String, String[]> addRoutes();
-    boolean isRequestValid(Request request);
     String[] getMethods(Request request);
+    boolean isPathValid(Request request);
+    boolean isMethodValid(Request request, String[] methods);
 }

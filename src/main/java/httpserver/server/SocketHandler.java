@@ -56,11 +56,18 @@ public class SocketHandler implements ISocketHandler {
 
     public Response processServerResponse(Request request) {
         Response response;
-        if (router.isRequestValid(request)) {
-            String[] methods = router.getMethods(request);
+        String[] methods = router.getMethods(request);
+
+        if (router.isPathValid(request) && router.isMethodValid(request, methods)) {
             response = responseWriter.buildSuccessResponse(request, methods);
             return response;
         }
+
+        if (router.isPathValid(request) && !(router.isMethodValid(request, methods))) {
+            response = responseWriter.buildMethodNotAllowedResponse(request, methods);
+            return response;
+        }
+
         response = responseWriter.buildPageNotFoundResponse(request);
         return response;
     }

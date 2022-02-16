@@ -36,7 +36,7 @@ public class ResponseWriterTest {
         ResponseWriter responseWriter = new ResponseWriter();
         Request request = new Request(Methods.GET,"/method_options", Constants.PROTOCOL, null, null);
         Response response = responseWriter.buildSuccessResponse(request, new String[]{request.method});
-        String headers = "Allow: GET";
+        String headers = Constants.ALLOW + ": " + Methods.GET;
         String expectedResponse = Constants.PROTOCOL + " " + StatusCodes.SUCCESS + Constants.LINE_BREAK + headers + Constants.LINE_BREAK + Constants.LINE_BREAK;
 
         String formattedResponse = responseWriter.formatResponse(response);
@@ -49,7 +49,7 @@ public class ResponseWriterTest {
         ResponseWriter responseWriter = new ResponseWriter();
         Request request = new Request(Methods.GET,"/simple_get_with_body", Constants.PROTOCOL, null, null);
         Response response = responseWriter.buildSuccessResponse(request, new String[]{request.method});
-        String headers = "Allow: GET";
+        String headers = Constants.ALLOW + ": " + Methods.GET;
         String expectedResponse = Constants.PROTOCOL + " " + StatusCodes.SUCCESS + Constants.LINE_BREAK + headers + Constants.LINE_BREAK + Constants.LINE_BREAK + "Hello world";
 
         String formattedResponse = responseWriter.formatResponse(response);
