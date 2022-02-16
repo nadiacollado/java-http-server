@@ -9,4 +9,5 @@ public interface IResponseWriter {
     String formatResponse(Response response) throws IOException;
     Response buildSuccessResponse(Request request, String[] methods);
     Response buildPageNotFoundResponse(Request request);
+    Response buildMethodNotAllowedResponse(Request request, String[] methods);
 }
