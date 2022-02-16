@@ -57,7 +57,8 @@ public class SocketHandler implements ISocketHandler {
     public Response processServerResponse(Request request) {
         Response response;
         if (router.isRequestValid(request)) {
-            response = responseWriter.buildSuccessResponse(request);
+            String[] methods = router.getMethods(request);
+            response = responseWriter.buildSuccessResponse(request, methods);
             return response;
         }
         response = responseWriter.buildPageNotFoundResponse(request);

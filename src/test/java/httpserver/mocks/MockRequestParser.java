@@ -4,7 +4,7 @@ import httpserver.request.RequestBuilder;
 import httpserver.interfaces.IRequestParser;
 import httpserver.models.Request;
 import httpserver.utils.Methods;
-import httpserver.utils.constants;
+import httpserver.utils.Constants;
 
 import java.io.InputStream;
 
@@ -18,7 +18,7 @@ public class MockRequestParser implements IRequestParser {
     @Override
     public Request parse(InputStream requestStream) {
         parseCalled = true;
-        return new Request(Methods.GET, "/simple_get", constants.PROTOCOL, null, null);
+        return new Request(Methods.GET, "/simple_get", Constants.PROTOCOL, null, null);
     }
 
     @Override

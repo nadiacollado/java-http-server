@@ -2,7 +2,7 @@ package httpserver.request;
 
 import httpserver.models.Request;
 import httpserver.utils.Methods;
-import httpserver.utils.constants;
+import httpserver.utils.Constants;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
@@ -33,7 +33,7 @@ public class RequestParserTest {
 
         assertEquals(Methods.GET, formattedRequest.method);
         assertEquals("/simple_get_with_body", formattedRequest.path);
-        assertEquals(constants.PROTOCOL, formattedRequest.protocol);
+        assertEquals(Constants.PROTOCOL, formattedRequest.protocol);
         assertEquals(headers, formattedRequest.headers);
         assertNull(formattedRequest.body);
     }
@@ -41,7 +41,7 @@ public class RequestParserTest {
     @Test
     public void setsHeaders() throws IOException {
         String headers =
-                "Connection: close\n"  +
+                "Connection: close\n" +
                 "Host: 127.0.0.1:5000\n" +
                 "User-Agent: http.rb/4.3.0\n" +
                 "Content-Length: 0";
@@ -64,10 +64,10 @@ public class RequestParserTest {
     @Test
     public void setHeadersHandlesNewLine() throws IOException {
         String headers =
-                "Connection: close\n"  +
+                "Connection: close\n" +
                         "Host: 127.0.0.1:5000\n" +
                         "User-Agent: http.rb/4.3.0\n" +
-                        "Content-Length: 0\n" +
+                        "Content-Length: 0" +
                         "\n";
         InputStream headersBytes = new ByteArrayInputStream(headers.getBytes());
         HashMap<String, String> expectedHeaders = new HashMap<>();

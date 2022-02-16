@@ -7,6 +7,6 @@ import java.io.IOException;
 
 public interface IResponseWriter {
     String formatResponse(Response response) throws IOException;
-    Response buildSuccessResponse(Request request);
+    Response buildSuccessResponse(Request request, String[] methods);
     Response buildPageNotFoundResponse(Request request);
 }

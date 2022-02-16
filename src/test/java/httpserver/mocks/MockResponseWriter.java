@@ -7,10 +7,11 @@ import httpserver.models.Response;
 public class MockResponseWriter implements IResponseWriter {
     public boolean buildSuccessResponseCalled = false;
     public boolean formatResponseCalled = false;
+    public boolean buildSuccessResponseWithMethodsCalled = false;
 
     @Override
-    public Response buildSuccessResponse(Request request){
-        buildSuccessResponseCalled = true;
+    public Response buildSuccessResponse(Request request, String[] methods){
+        buildSuccessResponseWithMethodsCalled = true;
         return new Response(null, null, null);
     }
 
@@ -28,7 +29,12 @@ public class MockResponseWriter implements IResponseWriter {
     public boolean wasBuildSuccessResponseCalled() {
         return buildSuccessResponseCalled;
     }
+    public boolean wasBuildSuccessResponseWithMethodsCalled() {
+        return buildSuccessResponseWithMethodsCalled;
+    }
+
     public boolean wasFormatResponseCalled() {
         return formatResponseCalled;
     }
+
 }
