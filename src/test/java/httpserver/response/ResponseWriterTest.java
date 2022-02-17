@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ResponseWriterTest {
     @Test
@@ -70,6 +69,17 @@ public class ResponseWriterTest {
         String formattedResponse = responseWriter.formatResponse(response);
 
         assertEquals(expectedResponse, formattedResponse);
+    }
+
+    @Test
+    public void returnsStringOfHeaders() {
+        ResponseWriter responseWriter = new ResponseWriter();
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("Location", "here");
+        Response response = new Response(StatusCodes.SUCCESS, headers, null);
+        String formattedHeaders = responseWriter.stringifyHeaders(response);
+
+        assertEquals("Location: here", formattedHeaders.trim());
     }
 
     @Test

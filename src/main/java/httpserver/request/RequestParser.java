@@ -44,14 +44,14 @@ public class RequestParser implements IRequestParser {
     }
 
     public void setBody(String contentLength, RequestBuilder requestBuilder) throws IOException {
-        if (contentLength != null && contentLength != "0") {
-            String parsedBod = null;
+        if (contentLength != null && !contentLength.equals("0")) {
+            String parsedBody = null;
             int bodyLength = Integer.parseInt(contentLength);
             char[] destination = new char[bodyLength];
             reader.read(destination, 0, bodyLength);
-            parsedBod = new String(destination, 0, bodyLength);
+            parsedBody = new String(destination, 0, bodyLength);
 
-            requestBuilder.setBody(parsedBod);
+            requestBuilder.setBody(parsedBody);
         }
     }
 
