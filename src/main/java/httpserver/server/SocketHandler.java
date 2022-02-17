@@ -6,7 +6,6 @@ import httpserver.interfaces.IRouter;
 import httpserver.interfaces.ISocketHandler;
 import httpserver.models.Request;
 import httpserver.models.Response;
-import httpserver.router.Router;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -41,6 +40,7 @@ public class SocketHandler implements ISocketHandler {
                 System.out.println("Error connecting to client");
 
             }
+
 
             Request request = processClientRequests(clientSocket.getInputStream());
             Response response = processServerResponse(request);

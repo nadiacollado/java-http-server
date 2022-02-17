@@ -71,4 +71,13 @@ public class ResponseWriterTest {
 
         assertEquals(expectedResponse, formattedResponse);
     }
+
+    @Test
+    public void returnsStringOfAllowedMethodsForAllowHeader() {
+        ResponseWriter responseWriter = new ResponseWriter();
+        String[] methodsList = {"GET", "HEAD", "OPTIONS"};
+        String methods = responseWriter.stringifyMethods(methodsList);
+
+        assertEquals("GET, HEAD, OPTIONS", methods);
+    }
 }
