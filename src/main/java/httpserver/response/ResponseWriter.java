@@ -6,6 +6,9 @@ import httpserver.interfaces.IResponseWriter;
 import httpserver.models.Request;
 import httpserver.models.Response;
 
+import java.util.Date;
+import java.util.HashMap;
+
 public class ResponseWriter implements IResponseWriter {
 
     public Response buildSuccessResponse(Request request, String[] methods) {
@@ -16,12 +19,23 @@ public class ResponseWriter implements IResponseWriter {
                     .addHeader(Constants.ALLOW, methods)
                     .setBody("Hello world")
                     .build();
-        } else {
+            return response;
+        }
+
+        if (request.path.equals("/echo_body")) {
+            System.out.println(request.headers);
+            response = new ResponseBuilder()
+                    .setStatusCode(StatusCodes.SUCCESS)
+                    .addHeader(Constants.ALLOW, methods)
+                    .setBody(request.body)
+                    .build();
+            return response;
+        }
+
             response = new ResponseBuilder()
                     .setStatusCode(StatusCodes.SUCCESS)
                     .addHeader(Constants.ALLOW, methods)
                     .build();
-        }
         return response;
     }
 
@@ -56,6 +70,7 @@ public class ResponseWriter implements IResponseWriter {
             headers = stringifyHeaders(response);
             formattedResponse.append(headers);
             formattedResponse.append(response.body);
+            System.out.println(formattedResponse);
             return formattedResponse.toString();
         }
 

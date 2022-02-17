@@ -8,7 +8,10 @@ import httpserver.utils.StatusCodes;
 import httpserver.utils.Constants;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ResponseWriterTest {
     @Test

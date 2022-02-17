@@ -22,6 +22,7 @@ public class Router implements IRouter {
         routes.put("/head_request", new String[]{Methods.HEAD, Methods.OPTIONS});
         routes.put("/method_options", new String[]{Methods.GET, Methods.HEAD, Methods.OPTIONS});
         routes.put("/method_options2", new String[]{Methods.GET, Methods.HEAD, Methods.OPTIONS, Methods.POST, Methods.PUT});
+        routes.put("/echo_body", new String[]{Methods.POST});
         return routes;
     }
 
