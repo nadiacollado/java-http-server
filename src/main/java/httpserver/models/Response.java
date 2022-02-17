@@ -8,9 +8,9 @@ public class Response {
     public String statusCode;
     public String body;
     public String protocol;
-    public HashMap<String, String[]> headers;
+    public HashMap<String, String> headers;
 
-    public Response(String statusCode, HashMap<String, String[]> headers, String body) {
+    public Response(String statusCode, HashMap<String, String> headers, String body) {
         this.protocol = Constants.PROTOCOL;
         this.statusCode = statusCode;
         this.headers = headers;

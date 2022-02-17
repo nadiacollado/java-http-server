@@ -36,7 +36,7 @@ public class RequestParserTest {
         assertEquals("/simple_get_with_body", formattedRequest.path);
         assertEquals(Constants.PROTOCOL, formattedRequest.protocol);
         assertEquals(headers, formattedRequest.headers);
-        assertEquals("", formattedRequest.body);
+        assertEquals(null, formattedRequest.body);
     }
 
     @Test

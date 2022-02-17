@@ -16,25 +16,31 @@ public class ResponseWriter implements IResponseWriter {
         if (request.path.equals("/simple_get_with_body")) {
             response = new ResponseBuilder()
                     .setStatusCode(StatusCodes.SUCCESS)
-                    .addHeader(Constants.ALLOW, methods)
+                    .addHeader(Constants.ALLOW, stringifyMethods(methods))
                     .setBody("Hello world")
                     .build();
             return response;
         }
 
         if (request.path.equals("/echo_body")) {
-            System.out.println(request.headers);
             response = new ResponseBuilder()
                     .setStatusCode(StatusCodes.SUCCESS)
-                    .addHeader(Constants.ALLOW, methods)
                     .setBody(request.body)
+                    .build();
+            return response;
+        }
+
+        if (request.path.equals("/redirect")) {
+            response = new ResponseBuilder()
+                    .setStatusCode(StatusCodes.REDIRECT)
+                    .addHeader("Location", "http://127.0.0.1:5000/simple_get")
                     .build();
             return response;
         }
 
             response = new ResponseBuilder()
                     .setStatusCode(StatusCodes.SUCCESS)
-                    .addHeader(Constants.ALLOW, methods)
+                    .addHeader(Constants.ALLOW, stringifyMethods(methods))
                     .build();
         return response;
     }
@@ -49,7 +55,7 @@ public class ResponseWriter implements IResponseWriter {
     public Response buildMethodNotAllowedResponse(Request request, String[] methods) {
         Response response = new ResponseBuilder()
                 .setStatusCode(StatusCodes.METHOD_NOT_ALLOWED)
-                .addHeader(Constants.ALLOW, methods)
+                .addHeader(Constants.ALLOW, stringifyMethods(methods))
                 .build();
         return response;
     }
@@ -70,7 +76,6 @@ public class ResponseWriter implements IResponseWriter {
             headers = stringifyHeaders(response);
             formattedResponse.append(headers);
             formattedResponse.append(response.body);
-            System.out.println(formattedResponse);
             return formattedResponse.toString();
         }
 
@@ -78,23 +83,21 @@ public class ResponseWriter implements IResponseWriter {
         return formattedResponse.toString();
     }
 
+    public String getStatusLine(Response response) {
+        return response.protocol + " " + response.statusCode + Constants.LINE_BREAK;
+    }
+
     public String stringifyHeaders(Response response) {
         StringBuilder formattedHeaders = new StringBuilder();
-        formattedHeaders.append(Constants.ALLOW + ": ");
-
-        String[] methodsList = response.headers.get(Constants.ALLOW);
-        for (int i = 0; i < methodsList.length; i++) {
-            formattedHeaders.append(methodsList[i]);
-            if (i < (methodsList.length - 1)) {
-                formattedHeaders.append(", ");
-            }
-        }
-        formattedHeaders.append(Constants.DOUBLE_LINE_BREAK);
+        response.headers.forEach((headerName, headerValue) -> {
+            formattedHeaders.append(headerName + ": " + headerValue + Constants.LINE_BREAK);
+        });
+        formattedHeaders.append(Constants.LINE_BREAK);
         return formattedHeaders.toString();
     }
 
-    public String getStatusLine(Response response) {
-        return response.protocol + " " + response.statusCode + Constants.LINE_BREAK;
+    public String stringifyMethods(String[] methodsList) {
+        return String.join(", ", methodsList);
     }
 
     private boolean hasHeaders(Response response) {
