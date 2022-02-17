@@ -3,10 +3,7 @@ package httpserver.request;
 import httpserver.interfaces.IRequestParser;
 import httpserver.models.Request;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class RequestParser implements IRequestParser {
    public BufferedReader reader;
@@ -19,6 +16,7 @@ public class RequestParser implements IRequestParser {
 
        setStartLine(startLine, requestBuilder);
        setHeaders(requestBuilder);
+       setBody(contentLength, requestBuilder);
        return requestBuilder.build();
     }
 
@@ -39,7 +37,6 @@ public class RequestParser implements IRequestParser {
                 String[] headerElements = headerLine.split(": ");
                 if (headerElements[0].equals("Content-Length")) {
                     contentLength = headerElements[1];
-                    setBody(contentLength, requestBuilder);
                 }
                 requestBuilder.addHeader(headerElements[0], headerElements[1]);
             }
@@ -47,13 +44,15 @@ public class RequestParser implements IRequestParser {
     }
 
     public void setBody(String contentLength, RequestBuilder requestBuilder) throws IOException {
-        if (contentLength.equals("0")) return;
-        String bodyLine;
-        StringBuilder body = new StringBuilder();
-        while ((bodyLine = reader.readLine()) != null) {
-            body.append(bodyLine + "\n");
+        if (contentLength != null && contentLength != "0") {
+            String parsedBod = null;
+            int bodyLength = Integer.parseInt(contentLength);
+            char[] destination = new char[bodyLength];
+            reader.read(destination, 0, bodyLength);
+            parsedBod = new String(destination, 0, bodyLength);
+
+            requestBuilder.setBody(parsedBod);
         }
-        requestBuilder.setBody(body.toString().trim());
     }
 
     public boolean isEmptyLine(String line) {

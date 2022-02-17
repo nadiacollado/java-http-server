@@ -1,5 +1,6 @@
 package httpserver.response;
 
+import httpserver.models.Request;
 import httpserver.models.Response;
 
 import java.util.Arrays;
