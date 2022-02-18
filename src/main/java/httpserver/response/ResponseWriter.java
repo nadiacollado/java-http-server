@@ -47,6 +47,15 @@ public class ResponseWriter implements IResponseWriter {
             return response;
         }
 
+        if (request.path.equals("/html_response")) {
+            response = new ResponseBuilder()
+                    .setStatusCode(StatusCodes.SUCCESS)
+                    .addHeader(Constants.TYPE, "text/html;charset=utf-8")
+                    .setBody("<html><body><p>HTML Response</p></body></html>")
+                    .build();
+            return response;
+        }
+
         response = new ResponseBuilder()
                 .setStatusCode(StatusCodes.SUCCESS)
                 .addHeader(Constants.ALLOW, stringifyMethods(methods))
