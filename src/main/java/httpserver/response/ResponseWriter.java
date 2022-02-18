@@ -33,15 +33,24 @@ public class ResponseWriter implements IResponseWriter {
         if (request.path.equals("/redirect")) {
             response = new ResponseBuilder()
                     .setStatusCode(StatusCodes.REDIRECT)
-                    .addHeader("Location", "http://127.0.0.1:5000/simple_get")
+                    .addHeader(Constants.LOCATION, "http://127.0.0.1:5000/simple_get")
                     .build();
             return response;
         }
 
+        if (request.path.equals("/text_response")) {
             response = new ResponseBuilder()
                     .setStatusCode(StatusCodes.SUCCESS)
-                    .addHeader(Constants.ALLOW, stringifyMethods(methods))
+                    .addHeader(Constants.TYPE, "text/plain;charset=utf-8")
+                    .setBody("text response")
                     .build();
+            return response;
+        }
+
+        response = new ResponseBuilder()
+                .setStatusCode(StatusCodes.SUCCESS)
+                .addHeader(Constants.ALLOW, stringifyMethods(methods))
+                .build();
         return response;
     }
 
