@@ -16,7 +16,6 @@ public class ResponseWriter implements IResponseWriter {
         if (request.path.equals("/simple_get_with_body")) {
             response = new ResponseBuilder()
                     .setStatusCode(StatusCodes.SUCCESS)
-                    .addHeader(Constants.ALLOW, stringifyMethods(methods))
                     .setBody("Hello world")
                     .build();
             return response;
@@ -52,6 +51,15 @@ public class ResponseWriter implements IResponseWriter {
                     .setStatusCode(StatusCodes.SUCCESS)
                     .addHeader(Constants.TYPE, "text/html;charset=utf-8")
                     .setBody("<html><body><p>HTML Response</p></body></html>")
+                    .build();
+            return response;
+        }
+
+        if (request.path.equals("/json_response")) {
+            response = new ResponseBuilder()
+                    .setStatusCode(StatusCodes.SUCCESS)
+                    .addHeader(Constants.TYPE, "application/json;charset=utf-8")
+                    .setBody("{\"key1\":\"value1\",\"key2\":\"value2\"}")
                     .build();
             return response;
         }

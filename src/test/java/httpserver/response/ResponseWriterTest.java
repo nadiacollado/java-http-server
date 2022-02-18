@@ -13,6 +13,7 @@ import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ResponseWriterTest {
+
     @Test
     public void returnsA200OKResponse() {
         IResponseWriter responseWriter = new ResponseWriter();
@@ -49,10 +50,10 @@ public class ResponseWriterTest {
     @Test
     public void createsFormattedResponseWithHeadersAndBody() {
         ResponseWriter responseWriter = new ResponseWriter();
-        Request request = new Request(Methods.GET,"/simple_get_with_body", Constants.PROTOCOL, null, null);
+        Request request = new Request(Methods.GET,"/text_response", Constants.PROTOCOL, null, null);
         Response response = responseWriter.buildSuccessResponse(request, new String[]{request.method});
-        String headers = Constants.ALLOW + ": " + Methods.GET;
-        String expectedResponse = Constants.PROTOCOL + " " + StatusCodes.SUCCESS + Constants.LINE_BREAK + headers + Constants.LINE_BREAK + Constants.LINE_BREAK + "Hello world";
+        String headers = Constants.TYPE + ": text/plain;charset=utf-8";
+        String expectedResponse = Constants.PROTOCOL + " " + StatusCodes.SUCCESS + Constants.LINE_BREAK + headers + Constants.LINE_BREAK + Constants.LINE_BREAK + "text response";
 
         String formattedResponse = responseWriter.formatResponse(response);
 

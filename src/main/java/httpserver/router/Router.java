@@ -26,6 +26,7 @@ public class Router implements IRouter {
         routes.put("/redirect", new String[]{Methods.GET});
         routes.put("/text_response", new String[]{Methods.GET});
         routes.put("/html_response", new String[]{Methods.GET});
+        routes.put("/json_response", new String[]{Methods.GET});
         return routes;
     }
 
