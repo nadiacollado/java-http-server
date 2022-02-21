@@ -1,17 +1,19 @@
 package httpserver.response;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.xml.XmlMapper;
 import httpserver.utils.StatusCodes;
 import httpserver.utils.Constants;
 import httpserver.interfaces.IResponseWriter;
 import httpserver.models.Request;
 import httpserver.models.Response;
 
-import java.util.Date;
-import java.util.HashMap;
+import java.io.IOException;
 
 public class ResponseWriter implements IResponseWriter {
 
-    public Response buildSuccessResponse(Request request, String[] methods) {
+    public Response buildSuccessResponse(Request request, String[] methods) throws IOException {
         Response response;
         if (request.path.equals("/simple_get_with_body")) {
             response = new ResponseBuilder()
@@ -59,7 +61,16 @@ public class ResponseWriter implements IResponseWriter {
             response = new ResponseBuilder()
                     .setStatusCode(StatusCodes.SUCCESS)
                     .addHeader(Constants.TYPE, "application/json;charset=utf-8")
-                    .setBody("{\"key1\":\"value1\",\"key2\":\"value2\"}")
+                    .setBody(convertObjToJSON("value1", "value2"))
+                    .build();
+            return response;
+        }
+
+        if (request.path.equals("/xml_response")) {
+            response = new ResponseBuilder()
+                    .setStatusCode(StatusCodes.SUCCESS)
+                    .addHeader(Constants.TYPE, "application/xml;charset=utf-8")
+                    .setBody(convertObjToXML("XML Response"))
                     .build();
             return response;
         }
@@ -132,5 +143,15 @@ public class ResponseWriter implements IResponseWriter {
 
     private boolean hasBody(Response response) {
         return response.body != null;
+    }
+
+    private String convertObjToJSON(String text1, String text2) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(new ExampleObject(text1, text2));
+    }
+
+    private String convertObjToXML(String text) throws IOException {
+        XmlMapper xmlMapper = new XmlMapper();
+        return xmlMapper.writeValueAsString(new note(text));
     }
 }

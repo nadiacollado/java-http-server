@@ -8,6 +8,7 @@ import httpserver.utils.StatusCodes;
 import httpserver.utils.Constants;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ResponseWriterTest {
 
     @Test
-    public void returnsA200OKResponse() {
+    public void returnsA200OKResponse() throws IOException {
         IResponseWriter responseWriter = new ResponseWriter();
         Request request = new Request(Methods.GET,"/simple_get", Constants.PROTOCOL, null, null);
 
@@ -35,7 +36,7 @@ public class ResponseWriterTest {
     }
 
     @Test
-    public void createsFormattedResponseWithHeaders() {
+    public void createsFormattedResponseWithHeaders() throws IOException {
         ResponseWriter responseWriter = new ResponseWriter();
         Request request = new Request(Methods.GET,"/method_options", Constants.PROTOCOL, null, null);
         Response response = responseWriter.buildSuccessResponse(request, new String[]{request.method});
@@ -48,7 +49,7 @@ public class ResponseWriterTest {
     }
 
     @Test
-    public void createsFormattedResponseWithHeadersAndBody() {
+    public void createsFormattedResponseWithHeadersAndBody() throws IOException {
         ResponseWriter responseWriter = new ResponseWriter();
         Request request = new Request(Methods.GET,"/text_response", Constants.PROTOCOL, null, null);
         Response response = responseWriter.buildSuccessResponse(request, new String[]{request.method});

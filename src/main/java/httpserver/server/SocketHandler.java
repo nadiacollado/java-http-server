@@ -54,7 +54,7 @@ public class SocketHandler implements ISocketHandler {
         return request;
     }
 
-    public Response processServerResponse(Request request) {
+    public Response processServerResponse(Request request) throws IOException {
         Response response;
         String[] methods = router.getMethods(request);
 
