@@ -3,53 +3,39 @@ package httpserver.server;
 import httpserver.interfaces.IRequestParser;
 import httpserver.interfaces.IResponseWriter;
 import httpserver.interfaces.IRouter;
-import httpserver.interfaces.ISocketHandler;
 import httpserver.models.Request;
 import httpserver.models.Response;
 
-import java.io.*;
-import java.net.ServerSocket;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 
-public class SocketHandler implements ISocketHandler {
-    ServerSocket serverSocket;
-    Socket clientSocket;
+public class ClientHandler implements Runnable {
+
+    private Socket clientSocket;
     IRequestParser requestParser;
     IResponseWriter responseWriter;
     IRouter router;
 
-    public SocketHandler(IRequestParser requestParser, IResponseWriter responseWriter, IRouter router){
+    ClientHandler(Socket clientSocket, IRequestParser requestParser, IResponseWriter responseWriter, IRouter router) {
+        this.clientSocket = clientSocket;
         this.requestParser = requestParser;
         this.responseWriter = responseWriter;
         this.router = router;
     }
 
-    public void connectSockets(int port) throws IOException {
+    @Override
+    public void run() {
+        Request request = null;
+        Response response = null;
         try {
-            createServerSocket(port);
-            System.out.println("Listening for connection on port " + port);
+            request = processClientRequests(clientSocket.getInputStream());
+            response = processServerResponse(request);
+            sendResponse(response, clientSocket.getOutputStream());
+            close();
         } catch (IOException e) {
-            System.out.println("Error creating server socket");
-        }
-
-        while (true) {
-            try {
-                clientSocket = acceptClient();
-                System.out.println("Connected to client!");
-            } catch (IOException e) {
-                System.out.println("Error connecting to client");
-
-            }
-
-            ClientHandler clientHandler = new ClientHandler(clientSocket, requestParser, responseWriter, router);
-            Thread thread = new Thread(clientHandler);
-            thread.start();
-
-
-//            Request request = processClientRequests(clientSocket.getInputStream());
-//            Response response = processServerResponse(request);
-//            sendResponse(response, clientSocket.getOutputStream());
-//            close();
+            e.printStackTrace();
         }
     }
 
@@ -79,16 +65,6 @@ public class SocketHandler implements ISocketHandler {
     public void sendResponse(Response response, OutputStream outputStream) throws IOException {
         String formattedResponse = responseWriter.formatResponse(response);
         outputStream.write(formattedResponse.getBytes());
-    }
-
-    public ServerSocket createServerSocket(int port) throws IOException {
-        serverSocket = new ServerSocket(port);
-        return serverSocket;
-    }
-
-    public Socket acceptClient() throws IOException {
-        clientSocket = serverSocket.accept();
-        return clientSocket;
     }
 
     public void close() throws IOException {
