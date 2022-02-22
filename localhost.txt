@@ -1,5 +1,0 @@
-var http = require('http')
-
-http.get({host: 'localhost', port: 5000, path: '/simple_get'})
-http.get({host: 'localhost', port: 5000, path: '/simple_get_with_body'})
-http.get({host: 'localhost', port: 5000, path: '/simple_get'})

@@ -1,8 +1,7 @@
 package httpserver.response;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.xml.XmlMapper;
+import httpserver.interfaces.IRouter;
+import httpserver.utils.Mappers;
 import httpserver.utils.StatusCodes;
 import httpserver.utils.Constants;
 import httpserver.interfaces.IResponseWriter;
@@ -10,8 +9,26 @@ import httpserver.models.Request;
 import httpserver.models.Response;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 public class ResponseWriter implements IResponseWriter {
+    public Response getResponse(Request request, IRouter router) throws IOException {
+        Response response;
+        String[] methods = router.getMethods(request);
+
+        if (router.isPathValid(request) && router.isMethodValid(request, methods)) {
+            response = buildSuccessResponse(request, methods);
+            return response;
+        }
+
+        if (router.isPathValid(request) && !(router.isMethodValid(request, methods))) {
+            response = buildMethodNotAllowedResponse(request, methods);
+            return response;
+        }
+
+        response = buildPageNotFoundResponse(request);
+        return response;
+    }
 
     public Response buildSuccessResponse(Request request, String[] methods) throws IOException {
         Response response;
@@ -61,7 +78,7 @@ public class ResponseWriter implements IResponseWriter {
             response = new ResponseBuilder()
                     .setStatusCode(StatusCodes.SUCCESS)
                     .addHeader(Constants.TYPE, "application/json;charset=utf-8")
-                    .setBody(convertObjToJSON("value1", "value2"))
+                    .setBody(Mappers.convertObjToJSON("value1", "value2"))
                     .build();
             return response;
         }
@@ -70,7 +87,7 @@ public class ResponseWriter implements IResponseWriter {
             response = new ResponseBuilder()
                     .setStatusCode(StatusCodes.SUCCESS)
                     .addHeader(Constants.TYPE, "application/xml;charset=utf-8")
-                    .setBody(convertObjToXML("XML Response"))
+                    .setBody(Mappers.convertObjToXML("XML Response"))
                     .build();
             return response;
         }
@@ -120,6 +137,11 @@ public class ResponseWriter implements IResponseWriter {
         return formattedResponse.toString();
     }
 
+    public void sendResponse(Response response, OutputStream outputStream) throws IOException {
+        String formattedResponse = formatResponse(response);
+        outputStream.write(formattedResponse.getBytes());
+    }
+
     public String getStatusLine(Response response) {
         return response.protocol + " " + response.statusCode + Constants.LINE_BREAK;
     }
@@ -138,20 +160,10 @@ public class ResponseWriter implements IResponseWriter {
     }
 
     private boolean hasHeaders(Response response) {
-        return response.headers.size() >= 1;
+        return response.headers != null;
     }
 
     private boolean hasBody(Response response) {
         return response.body != null;
-    }
-
-    private String convertObjToJSON(String text1, String text2) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(new ExampleObject(text1, text2));
-    }
-
-    private String convertObjToXML(String text) throws IOException {
-        XmlMapper xmlMapper = new XmlMapper();
-        return xmlMapper.writeValueAsString(new note(text));
     }
 }

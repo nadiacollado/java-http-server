@@ -20,17 +20,17 @@ public class RequestParserTest {
                         "Host: 127.0.0.1:5000\n" +
                         "User-Agent: http.rb/4.3.0\n" +
                         "Content-Length: 0" + Constants.DOUBLE_LINE_BREAK;
-
         InputStream requestStream = new ByteArrayInputStream(request.getBytes());
-
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Connection", "close");
         headers.put("Host", "127.0.0.1:5000");
         headers.put("User-Agent", "http.rb/4.3.0");
         headers.put("Content-Length", "0");
+        RequestBuilder requestBuilder = new RequestBuilder();
+        RequestReader reader = new RequestReader(requestStream);
+        RequestParser handler = new RequestParser(requestBuilder);
 
-        RequestParser handler = new RequestParser();
-        Request formattedRequest = handler.parse(requestStream);
+        Request formattedRequest = handler.parse(reader);
 
         assertEquals(Methods.GET, formattedRequest.method);
         assertEquals("/simple_get_with_body", formattedRequest.path);
@@ -52,12 +52,12 @@ public class RequestParserTest {
         expectedHeaders.put("Host", "127.0.0.1:5000");
         expectedHeaders.put("User-Agent", "http.rb/4.3.0");
         expectedHeaders.put("Content-Length", "0");
-        RequestParser parser = new RequestParser();
-        parser.reader = new BufferedReader(new InputStreamReader(headersBytes));
         RequestBuilder requestBuilder = new RequestBuilder();
+        RequestParser parser = new RequestParser(requestBuilder);
+        parser.reader = new RequestReader(headersBytes);
         Request request = requestBuilder.build();
 
-        parser.setHeaders(requestBuilder);
+        parser.setHeaders();
 
         assertEquals(expectedHeaders, request.headers);
     }
@@ -75,31 +75,28 @@ public class RequestParserTest {
         expectedHeaders.put("Host", "127.0.0.1:5000");
         expectedHeaders.put("User-Agent", "http.rb/4.3.0");
         expectedHeaders.put("Content-Length", "0");
-        RequestParser parser = new RequestParser();
-        parser.reader = new BufferedReader(new InputStreamReader(headersBytes));
         RequestBuilder requestBuilder = new RequestBuilder();
+        RequestParser parser = new RequestParser(requestBuilder);
+        parser.reader = new RequestReader(headersBytes);
         Request request = requestBuilder.build();
 
-        parser.setHeaders(requestBuilder);
+        parser.setHeaders();
 
         assertEquals(expectedHeaders, request.headers);
     }
 
     @Test
     public void setsBody() throws IOException {
-        String requestWithBody =
-                "GET /simple_get_with_body HTTP/1.1\n" +
-                        "Connection: close\n"  +
-                        "Host: 127.0.0.1:5000\n" +
-                        "User-Agent: http.rb/4.3.0\n" +
-                        "Content-Length: 9" + Constants.DOUBLE_LINE_BREAK +
-                        "Body Line";
-        InputStream requestBytes = new ByteArrayInputStream(requestWithBody.getBytes());
-        RequestParser parser = new RequestParser();
-        parser.reader = new BufferedReader(new InputStreamReader(requestBytes));
-        Request request = parser.parse(requestBytes);
+        String requestBody = "Body Line";
+        InputStream requestBytes = new ByteArrayInputStream(requestBody.getBytes());
+        RequestBuilder requestBuilder = new RequestBuilder();
+        RequestParser parser = new RequestParser(requestBuilder);
+        parser.reader = new RequestReader(requestBytes);
 
-        assertEquals("Body Line", request.body);
+        parser.setBody("9");
+        Request request = requestBuilder.build();
+
+        assertEquals(requestBody, request.body);
     }
 
     @Test
@@ -111,13 +108,13 @@ public class RequestParserTest {
         HashMap<String, String> expectedHeaders = new HashMap<>();
         expectedHeaders.put("Host", "127.0.0.1:5000");
         expectedHeaders.put("Content-Length", "0");
-        RequestParser parser = new RequestParser();
-        parser.reader = new BufferedReader(new InputStreamReader(headersBytes));
         RequestBuilder requestBuilder = new RequestBuilder();
+        RequestParser parser = new RequestParser(requestBuilder);
+        parser.reader = new RequestReader(headersBytes);
         Request request = requestBuilder.build();
 
-        parser.setHeaders(requestBuilder);
-        parser.setBody("0", requestBuilder);
+        parser.setHeaders();
+        parser.setBody("0");
 
         assertEquals(null, request.body);
     }

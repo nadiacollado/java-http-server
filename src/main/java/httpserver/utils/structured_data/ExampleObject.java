@@ -1,4 +1,4 @@
-package httpserver.response;
+package httpserver.utils.structured_data;
 
 public class ExampleObject {
     String key1;

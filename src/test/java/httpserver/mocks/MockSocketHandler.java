@@ -9,7 +9,6 @@ public class MockSocketHandler implements ISocketHandler {
     public boolean connectSocketCalled = false;
     public boolean acceptClientCalled = false;
     public boolean createServerSocketCalled = false;
-    public boolean closeCalled = false;
 
     @Override
     public void connectSockets(int port) {
@@ -30,19 +29,12 @@ public class MockSocketHandler implements ISocketHandler {
         return null;
     }
 
-    @Override
-    public void close() {
-        closeCalled = true;
-    }
-
     public boolean wasConnectSocketsCalled() {
         return connectSocketCalled;
     }
-
     public boolean wasCreateServerSocketCalled() {
         return createServerSocketCalled;
     }
-
     public boolean wasAcceptClientCalled() {
         return acceptClientCalled;
     }

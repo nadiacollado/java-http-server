@@ -8,5 +8,4 @@ public interface ISocketHandler {
     void connectSockets(int port) throws IOException;
     ServerSocket createServerSocket(int port) throws IOException;
     Socket acceptClient() throws IOException;
-    void close() throws IOException;
 }
