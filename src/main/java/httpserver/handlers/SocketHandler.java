@@ -35,10 +35,11 @@ public class SocketHandler implements ISocketHandler {
             try {
                 clientSocket = acceptClient();
                 System.out.println("Connected to client!");
-                ClientHandler clientHandler = new ClientHandler(clientSocket, requestParser, responseWriter, router);
+                ClientHandler clientHandler = new ClientHandler(clientSocket.getInputStream(), clientSocket.getOutputStream(), requestParser, responseWriter, router);
                 Thread thread = new Thread(clientHandler);
                 thread.start();
                 thread.join();
+                close();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
@@ -55,5 +56,9 @@ public class SocketHandler implements ISocketHandler {
     public Socket acceptClient() throws IOException {
         clientSocket = serverSocket.accept();
         return clientSocket;
+    }
+
+    public void close() throws IOException {
+        clientSocket.close();
     }
 }

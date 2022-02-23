@@ -9,17 +9,21 @@ import httpserver.models.Response;
 import httpserver.request.RequestReader;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 
 public class ClientHandler implements Runnable {
-    private Socket clientSocket;
+    private InputStream input;
+    private OutputStream output;
     private IRequestParser requestParser;
     private IResponseWriter responseWriter;
     private IRouter router;
     private IReader reader;
 
-    ClientHandler(Socket clientSocket, IRequestParser requestParser, IResponseWriter responseWriter, IRouter router) {
-        this.clientSocket = clientSocket;
+    ClientHandler(InputStream input, OutputStream output, IRequestParser requestParser, IResponseWriter responseWriter, IRouter router) {
+        this.input = input;
+        this.output = output;
         this.requestParser = requestParser;
         this.responseWriter = responseWriter;
         this.router = router;
@@ -27,11 +31,11 @@ public class ClientHandler implements Runnable {
 
     public void run() {
         try {
-            reader = new RequestReader(clientSocket.getInputStream());
+            reader = new RequestReader(input);
             Request request = requestParser.parse(reader);
             if (request != null) {
                 Response response = responseWriter.getResponse(request, router);
-                responseWriter.sendResponse(response, clientSocket.getOutputStream());
+                responseWriter.sendResponse(response, output);
             }
             close();
         } catch (IOException e) {
@@ -40,7 +44,6 @@ public class ClientHandler implements Runnable {
     }
 
     public void close() throws IOException {
-        clientSocket.close();
         reader.close();
     }
 }
