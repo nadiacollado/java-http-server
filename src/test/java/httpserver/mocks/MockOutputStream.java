@@ -9,7 +9,6 @@ public class MockOutputStream extends OutputStream {
     public void write(int b) {
         writeCalled = true;
     }
-
     public boolean wasWriteCalled() {
         return writeCalled;
     }
