@@ -38,9 +38,11 @@ public class SocketHandler implements ISocketHandler {
                 ClientHandler clientHandler = new ClientHandler(clientSocket, requestParser, responseWriter, router);
                 Thread thread = new Thread(clientHandler);
                 thread.start();
+                thread.join();
             } catch (IOException e) {
                 e.printStackTrace();
-
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }

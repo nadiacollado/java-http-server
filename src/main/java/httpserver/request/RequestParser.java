@@ -19,6 +19,9 @@ public class RequestParser implements IRequestParser {
        reader = requestReader;
        String startLine = reader.readLine();
 
+       if (startLine == null) {
+           return null;
+       }
        setStartLine(startLine);
        setHeaders();
        setBody(contentLength);

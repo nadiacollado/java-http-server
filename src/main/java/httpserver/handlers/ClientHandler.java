@@ -25,13 +25,14 @@ public class ClientHandler implements Runnable {
         this.router = router;
     }
 
-    @Override
     public void run() {
         try {
             reader = new RequestReader(clientSocket.getInputStream());
             Request request = requestParser.parse(reader);
-            Response response = responseWriter.getResponse(request, router);
-            responseWriter.sendResponse(response, clientSocket.getOutputStream());
+            if (request != null) {
+                Response response = responseWriter.getResponse(request, router);
+                responseWriter.sendResponse(response, clientSocket.getOutputStream());
+            }
             close();
         } catch (IOException e) {
             e.printStackTrace();
