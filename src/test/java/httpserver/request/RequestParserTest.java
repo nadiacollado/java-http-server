@@ -1,14 +1,13 @@
 package httpserver.request;
 
 import httpserver.models.Request;
-import httpserver.router.Router;
-import httpserver.utils.Methods;
-import httpserver.utils.Constants;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.util.HashMap;
 
+import static httpserver.utils.Constants.*;
+import static httpserver.utils.Methods.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RequestParserTest {
@@ -19,7 +18,7 @@ public class RequestParserTest {
                         "Connection: close\n"  +
                         "Host: 127.0.0.1:5000\n" +
                         "User-Agent: http.rb/4.3.0\n" +
-                        "Content-Length: 0" + Constants.DOUBLE_LINE_BREAK;
+                        "Content-Length: 0" + DOUBLE_LINE_BREAK;
         InputStream requestStream = new ByteArrayInputStream(request.getBytes());
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Connection", "close");
@@ -32,9 +31,9 @@ public class RequestParserTest {
 
         Request formattedRequest = handler.parse(reader);
 
-        assertEquals(Methods.GET, formattedRequest.method);
+        assertEquals(GET, formattedRequest.method);
         assertEquals("/simple_get_with_body", formattedRequest.path);
-        assertEquals(Constants.PROTOCOL, formattedRequest.protocol);
+        assertEquals(PROTOCOL, formattedRequest.protocol);
         assertEquals(headers, formattedRequest.headers);
         assertEquals(null, formattedRequest.body);
     }
@@ -45,7 +44,7 @@ public class RequestParserTest {
                 "Connection: close\n" +
                 "Host: 127.0.0.1:5000\n" +
                 "User-Agent: http.rb/4.3.0\n" +
-                "Content-Length: 0" + Constants.DOUBLE_LINE_BREAK;
+                "Content-Length: 0" + DOUBLE_LINE_BREAK;
         InputStream headersBytes = new ByteArrayInputStream(headers.getBytes());
         HashMap<String, String> expectedHeaders = new HashMap<>();
         expectedHeaders.put("Connection", "close");
@@ -68,7 +67,7 @@ public class RequestParserTest {
                 "Connection: close\n" +
                         "Host: 127.0.0.1:5000\n" +
                         "User-Agent: http.rb/4.3.0\n" +
-                        "Content-Length: 0" + Constants.DOUBLE_LINE_BREAK;
+                        "Content-Length: 0" + DOUBLE_LINE_BREAK;
         InputStream headersBytes = new ByteArrayInputStream(headers.getBytes());
         HashMap<String, String> expectedHeaders = new HashMap<>();
         expectedHeaders.put("Connection", "close");
@@ -103,7 +102,7 @@ public class RequestParserTest {
     public void setsBodyToNullWhenRequestDoesNotIncludeBody() throws IOException {
         String headers =
                         "Host: 127.0.0.1:5000\n" +
-                        "Content-Length: 0" + Constants.DOUBLE_LINE_BREAK;
+                        "Content-Length: 0" + DOUBLE_LINE_BREAK;
         InputStream headersBytes = new ByteArrayInputStream(headers.getBytes());
         HashMap<String, String> expectedHeaders = new HashMap<>();
         expectedHeaders.put("Host", "127.0.0.1:5000");

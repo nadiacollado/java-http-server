@@ -8,10 +8,7 @@ import httpserver.models.Request;
 import httpserver.models.Response;
 import httpserver.request.RequestReader;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
+import java.io.*;
 
 public class ClientHandler implements Runnable {
     private InputStream input;

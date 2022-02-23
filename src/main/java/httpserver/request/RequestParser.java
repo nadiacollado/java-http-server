@@ -7,34 +7,35 @@ import httpserver.models.Request;
 import java.io.*;
 
 public class RequestParser implements IRequestParser {
-   public IReader reader;
-   private String contentLength;
-   private RequestBuilder requestBuilder;
+    public IReader reader;
+    private String contentLength;
+    private RequestBuilder requestBuilder;
 
-   public RequestParser (RequestBuilder requestBuilder) {
-       this.requestBuilder = requestBuilder;
-   }
+    public RequestParser (RequestBuilder requestBuilder) {
+        this.requestBuilder = requestBuilder;
+    }
 
-   public Request parse(IReader requestReader) throws IOException {
-       reader = requestReader;
-       String startLine = reader.readLine();
+    public Request parse(IReader requestReader) throws IOException {
+        reader = requestReader;
+        String startLine = reader.readLine();
 
-       if (startLine == null) {
+        if (startLine == null) {
            return null;
-       }
-       setStartLine(startLine);
-       setHeaders();
-       setBody(contentLength);
-       return requestBuilder.build();
-   }
+        }
 
-   public void setStartLine(String startLine) {
-       String[] requestElements = startLine.split(" ");
+        setStartLine(startLine);
+        setHeaders();
+        setBody(contentLength);
+        return requestBuilder.build();
+    }
+
+    public void setStartLine(String startLine) {
+        String[] requestElements = startLine.split(" ");
         requestBuilder
-            .setMethod(requestElements[0])
-            .setPath(requestElements[1])
-            .setProtocol(requestElements[2]);
-   }
+                .setMethod(requestElements[0])
+                .setPath(requestElements[1])
+                .setProtocol(requestElements[2]);
+    }
 
     public void setHeaders() throws IOException {
         String headerLine;
@@ -48,7 +49,7 @@ public class RequestParser implements IRequestParser {
                 }
                 requestBuilder.addHeader(headerElements[0], headerElements[1]);
             }
-       }
+        }
     }
 
     public void setBody(String contentLength) throws IOException {

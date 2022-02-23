@@ -5,7 +5,6 @@ import httpserver.interfaces.IRouter;
 import httpserver.models.Request;
 import httpserver.models.Response;
 
-import java.io.IOException;
 import java.io.OutputStream;
 
 public class MockResponseWriter implements IResponseWriter {
@@ -31,13 +30,13 @@ public class MockResponseWriter implements IResponseWriter {
     }
 
     @Override
-    public Response getResponse(Request request, IRouter router) throws IOException {
+    public Response getResponse(Request request, IRouter router) {
         getResponseCalled = true;
         return null;
     }
 
     @Override
-    public void sendResponse(Response response, OutputStream outputStream) throws IOException {
+    public void sendResponse(Response response, OutputStream outputStream) {
         sendResponseCalled = true;
     }
 
@@ -52,13 +51,5 @@ public class MockResponseWriter implements IResponseWriter {
     }
     public boolean wasSendResponseCalled() {
         return sendResponseCalled;
-    }
-
-
-    public boolean wasBuildSuccessResponseCalled() {
-        return buildSuccessResponseCalled;
-    }
-    public boolean wasFormatResponseCalled() {
-        return formatResponseCalled;
     }
 }

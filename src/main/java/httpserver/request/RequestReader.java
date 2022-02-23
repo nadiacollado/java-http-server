@@ -10,8 +10,8 @@ import java.io.InputStreamReader;
 public class RequestReader implements IReader {
     private BufferedReader reader;
 
-    public RequestReader(InputStream request) throws IOException {
-        this.reader = new BufferedReader(new InputStreamReader(request));
+    public RequestReader(InputStream input) throws IOException {
+        this.reader = new BufferedReader(new InputStreamReader(input));
     }
 
     public String readLine() throws IOException {
