@@ -28,7 +28,7 @@ public class ClientHandler implements Runnable {
 
     public void run() {
         try {
-            reader = new RequestReader(input);
+            reader = new RequestReader(new BufferedReader(new InputStreamReader(input)));
             Request request = requestParser.parse(reader);
             if (request != null) {
                 Response response = responseWriter.getResponse(request, router);
