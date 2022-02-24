@@ -1,5 +1,7 @@
 package httpserver.request;
 
+import httpserver.mocks.MockBufferedReader;
+import httpserver.mocks.MockReader;
 import httpserver.models.Request;
 import org.junit.jupiter.api.Test;
 
@@ -13,21 +15,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RequestParserTest {
     @Test
     public void parsesHTTPRequest () throws IOException {
-        String request =
-                "GET /simple_get_with_body HTTP/1.1\n" +
-                        "Connection: close\n"  +
-                        "Host: 127.0.0.1:5000\n" +
-                        "User-Agent: http.rb/4.3.0\n" +
-                        "Content-Length: 0" + DOUBLE_LINE_BREAK;
-        InputStream requestStream = new ByteArrayInputStream(request.getBytes());
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Connection", "close");
-        headers.put("Host", "127.0.0.1:5000");
-        headers.put("User-Agent", "http.rb/4.3.0");
-        headers.put("Content-Length", "0");
         RequestBuilder requestBuilder = new RequestBuilder();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(requestStream));
-        RequestReader reader = new RequestReader(bufferedReader);
+        MockReader mockReader = new MockReader();
+        MockBufferedReader mockBufferedReader = new MockBufferedReader(mockReader);
+        mockBufferedReader.setReadLineValues(new String[] {"GET /simple_get_with_body HTTP/1.1", "Connection: close"});
+        RequestReader reader = new RequestReader(mockBufferedReader);
         RequestParser handler = new RequestParser(requestBuilder);
 
         Request formattedRequest = handler.parse(reader);
@@ -41,21 +35,14 @@ public class RequestParserTest {
 
     @Test
     public void setsHeaders() throws IOException {
-        String headers =
-                "Connection: close\n" +
-                "Host: 127.0.0.1:5000\n" +
-                "User-Agent: http.rb/4.3.0\n" +
-                "Content-Length: 0" + DOUBLE_LINE_BREAK;
-        InputStream headersBytes = new ByteArrayInputStream(headers.getBytes());
         HashMap<String, String> expectedHeaders = new HashMap<>();
         expectedHeaders.put("Connection", "close");
-        expectedHeaders.put("Host", "127.0.0.1:5000");
-        expectedHeaders.put("User-Agent", "http.rb/4.3.0");
-        expectedHeaders.put("Content-Length", "0");
         RequestBuilder requestBuilder = new RequestBuilder();
+        MockReader mockReader = new MockReader();
+        MockBufferedReader mockBufferedReader = new MockBufferedReader(mockReader);
+        mockBufferedReader.setReadLineValues(new String[] {"Connection: close"});
+        RequestReader reader = new RequestReader(mockBufferedReader);
         RequestParser parser = new RequestParser(requestBuilder);
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(headersBytes));
-        RequestReader reader = new RequestReader(bufferedReader);
         parser.reader = reader;
         Request request = requestBuilder.build();
 
@@ -66,20 +53,13 @@ public class RequestParserTest {
 
     @Test
     public void setHeadersHandlesNewLine() throws IOException {
-        String headers =
-                "Connection: close\n" +
-                        "Host: 127.0.0.1:5000\n" +
-                        "User-Agent: http.rb/4.3.0\n" +
-                        "Content-Length: 0" + DOUBLE_LINE_BREAK;
-        InputStream headersBytes = new ByteArrayInputStream(headers.getBytes());
         HashMap<String, String> expectedHeaders = new HashMap<>();
-        expectedHeaders.put("Connection", "close");
-        expectedHeaders.put("Host", "127.0.0.1:5000");
-        expectedHeaders.put("User-Agent", "http.rb/4.3.0");
         expectedHeaders.put("Content-Length", "0");
         RequestBuilder requestBuilder = new RequestBuilder();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(headersBytes));
-        RequestReader reader = new RequestReader(bufferedReader);
+        MockReader mockReader = new MockReader();
+        MockBufferedReader mockBufferedReader = new MockBufferedReader(mockReader);
+        mockBufferedReader.setReadLineValues(new String[] {"Content-Length: 0", DOUBLE_LINE_BREAK});
+        RequestReader reader = new RequestReader(mockBufferedReader);
         RequestParser parser = new RequestParser(requestBuilder);
         parser.reader = reader;
         Request request = requestBuilder.build();
@@ -92,11 +72,12 @@ public class RequestParserTest {
     @Test
     public void setsBody() throws IOException {
         String requestBody = "Body Line";
-        InputStream bodyBytes = new ByteArrayInputStream(requestBody.getBytes());
         RequestBuilder requestBuilder = new RequestBuilder();
+        MockReader mockReader = new MockReader();
+        MockBufferedReader mockBufferedReader = new MockBufferedReader(mockReader);
+        mockBufferedReader.setReadValues(requestBody);
+        RequestReader reader = new RequestReader(mockBufferedReader);
         RequestParser parser = new RequestParser(requestBuilder);
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(bodyBytes));
-        RequestReader reader = new RequestReader(bufferedReader);
         parser.reader = reader;
 
         parser.setBody("9");
@@ -107,21 +88,14 @@ public class RequestParserTest {
 
     @Test
     public void setsBodyToNullWhenRequestDoesNotIncludeBody() throws IOException {
-        String headers =
-                        "Host: 127.0.0.1:5000\n" +
-                        "Content-Length: 0" + DOUBLE_LINE_BREAK;
-        InputStream headerBytes = new ByteArrayInputStream(headers.getBytes());
-        HashMap<String, String> expectedHeaders = new HashMap<>();
-        expectedHeaders.put("Host", "127.0.0.1:5000");
-        expectedHeaders.put("Content-Length", "0");
         RequestBuilder requestBuilder = new RequestBuilder();
+        MockReader mockReader = new MockReader();
+        MockBufferedReader mockBufferedReader = new MockBufferedReader(mockReader);
+        RequestReader reader = new RequestReader(mockBufferedReader);
         RequestParser parser = new RequestParser(requestBuilder);
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(headerBytes));
-        RequestReader reader = new RequestReader(bufferedReader);
         parser.reader = reader;
-        Request request = requestBuilder.build();
 
-        parser.setHeaders();
+        Request request = requestBuilder.build();
         parser.setBody("0");
 
         assertEquals(null, request.body);

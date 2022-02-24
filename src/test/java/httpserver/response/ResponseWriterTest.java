@@ -5,7 +5,6 @@ import httpserver.mocks.MockOutputStream;
 import httpserver.mocks.MockRouter;
 import httpserver.models.Request;
 import httpserver.models.Response;
-import httpserver.utils.Constants;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -98,7 +97,7 @@ public class ResponseWriterTest {
         ResponseWriter responseWriter = new ResponseWriter();
         Request request = new Request(GET,"/method_options", PROTOCOL, null, null);
         Response response = responseWriter.buildSuccessResponse(request, new String[]{request.method});
-        String headers = Constants.ALLOW + ": " + GET;
+        String headers = ALLOW + ": " + GET;
         String expectedResponse = PROTOCOL + " " + SUCCESS + LINE_BREAK + headers + DOUBLE_LINE_BREAK;
 
         String formattedResponse = responseWriter.formatResponse(response);
@@ -111,7 +110,7 @@ public class ResponseWriterTest {
         ResponseWriter responseWriter = new ResponseWriter();
         Request request = new Request(GET,"/text_response", PROTOCOL, null, null);
         Response response = responseWriter.buildSuccessResponse(request, new String[]{request.method});
-        String headers = Constants.TYPE + ": text/plain;charset=utf-8";
+        String headers = TYPE + ": text/plain;charset=utf-8";
         String expectedResponse = PROTOCOL + " " + SUCCESS + LINE_BREAK + headers + DOUBLE_LINE_BREAK + "text response";
 
         String formattedResponse = responseWriter.formatResponse(response);

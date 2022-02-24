@@ -6,6 +6,8 @@ import httpserver.models.Request;
 
 import java.io.*;
 
+import static httpserver.utils.Constants.*;
+
 public class RequestParser implements IRequestParser {
     public IReader reader;
     private String contentLength;
@@ -54,17 +56,17 @@ public class RequestParser implements IRequestParser {
 
     public void setBody(String contentLength) throws IOException {
         if (contentLength != null && !contentLength.equals("0")) {
-            String parsedBody = null;
+            String body = null;
             int bodyLength = Integer.parseInt(contentLength);
-            char[] destination = new char[bodyLength];
-            reader.read(destination, 0, bodyLength);
-            parsedBody = new String(destination, 0, bodyLength);
+            char[] container = new char[bodyLength];
+            reader.read(container, 0, bodyLength);
+            body = new String(container, 0, bodyLength);
 
-            requestBuilder.setBody(parsedBody);
+            requestBuilder.setBody(body);
         }
     }
 
     public boolean isEmptyLine(String line) {
-        return line.equals("");
+        return line.equals("") || line.equals(DOUBLE_LINE_BREAK);
     }
 }
