@@ -2,10 +2,11 @@ package httpserver.mocks;
 
 import httpserver.interfaces.IRouter;
 import httpserver.models.Request;
-import httpserver.utils.Methods;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static httpserver.utils.Methods.GET;
 
 public class MockRouter implements IRouter {
     public Map<String, String[]> routes;
@@ -17,7 +18,7 @@ public class MockRouter implements IRouter {
     @Override
     public Map<String, String[]> addRoutes() {
         Map<String, String[]> routes = new HashMap<>();
-        routes.put("/simple_get_with_body", new String[]{Methods.GET});
+        routes.put("/simple_get_with_body", new String[]{GET});
         return routes;
     }
 
@@ -33,7 +34,7 @@ public class MockRouter implements IRouter {
 
     @Override
     public boolean isMethodValid(Request request, String[] methods) {
-        if (request.method.equals(Methods.GET)) return true;
+        if (request.method.equals(GET)) return true;
         return false;
     }
 }

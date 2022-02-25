@@ -1,13 +1,13 @@
 package httpserver.router;
 
-import httpserver.utils.Methods;
 import httpserver.models.Request;
-import httpserver.utils.Constants;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Map;
 
+import static httpserver.utils.Constants.*;
+import static httpserver.utils.Methods.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RouterTest {
@@ -22,7 +22,7 @@ class RouterTest {
 
     @Test
     void returnsRoutesForGivenRequest() {
-        Request request = new Request(Methods.GET,"/simple_get", Constants.PROTOCOL, null, null);
+        Request request = new Request(GET,"/simple_get", PROTOCOL, null, null);
         Router router = new Router();
 
         String[] methodsList = router.getMethods(request);
@@ -33,7 +33,7 @@ class RouterTest {
 
     @Test
     void returnsTrueIfPathExistsInRouter() {
-        Request request = new Request(Methods.GET,"/simple_get", Constants.PROTOCOL, null, null);
+        Request request = new Request(GET,"/simple_get", PROTOCOL, null, null);
         Router router = new Router();
 
         assertTrue(router.isPathValid(request));
@@ -41,7 +41,7 @@ class RouterTest {
 
     @Test
     void returnsFalseIfPathDoesNotExistInRouter() {
-        Request request = new Request(Methods.GET,"/simple_get_thousand", Constants.PROTOCOL, null, null);
+        Request request = new Request(GET,"/simple_get_thousand", PROTOCOL, null, null);
         Router router = new Router();
 
         assertFalse(router.isPathValid(request));
@@ -49,7 +49,7 @@ class RouterTest {
 
     @Test
     void returnsTrueIfMethodIsAllowedForRequest() {
-        Request request = new Request(Methods.GET,"/simple_get", Constants.PROTOCOL, null, null);
+        Request request = new Request(GET,"/simple_get", PROTOCOL, null, null);
         Router router = new Router();
         String[] methods = router.getMethods(request);
 
@@ -58,7 +58,7 @@ class RouterTest {
 
     @Test
     void returnsFalseIfMethodIsNotAllowedForRequest() {
-        Request request = new Request(Methods.OPTIONS,"/simple_get", Constants.PROTOCOL, null, null);
+        Request request = new Request(OPTIONS,"/simple_get", PROTOCOL, null, null);
         Router router = new Router();
         String[] methods = router.getMethods(request);
 
