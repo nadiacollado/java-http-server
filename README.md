@@ -14,6 +14,17 @@ Start the server by running the following command:
 
 `./gradlew run`
 
-Run tests:
+To run unit tests:
 
 `./gradlew test`
+
+To run acceptance tests:
+
+`cd http_server_spec`
+
+`bundle install`
+
+`rake test`
+
+More information on the [acceptance tests](https://github.com/8thlight/http_server_spec).
+
