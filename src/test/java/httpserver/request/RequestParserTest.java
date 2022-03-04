@@ -2,6 +2,7 @@ package httpserver.request;
 
 import httpserver.mocks.MockBufferedReader;
 import httpserver.mocks.MockReader;
+import httpserver.mocks.MockRequestReader;
 import httpserver.models.Request;
 import org.junit.jupiter.api.Test;
 
@@ -21,11 +22,12 @@ public class RequestParserTest {
         MockReader mockReader = new MockReader();
         MockBufferedReader mockBufferedReader = new MockBufferedReader(mockReader);
         mockBufferedReader.setReadLineValues(new String[] {"GET /simple_get_with_body HTTP/1.1", "Connection: close"});
-        RequestReader reader = new RequestReader(mockBufferedReader);
+        MockRequestReader mockRequestReader = new MockRequestReader(mockBufferedReader);
         RequestParser handler = new RequestParser(requestBuilder);
 
-        Request formattedRequest = handler.parse(reader);
+        Request formattedRequest = handler.parse(mockRequestReader);
 
+        assertTrue(mockRequestReader.wasReadLineCalled());
         assertEquals(GET, formattedRequest.method);
         assertEquals("/simple_get_with_body", formattedRequest.path);
         assertEquals(PROTOCOL, formattedRequest.protocol);
@@ -41,13 +43,14 @@ public class RequestParserTest {
         MockReader mockReader = new MockReader();
         MockBufferedReader mockBufferedReader = new MockBufferedReader(mockReader);
         mockBufferedReader.setReadLineValues(new String[] {"Connection: close"});
-        RequestReader reader = new RequestReader(mockBufferedReader);
+        MockRequestReader mockRequestReader = new MockRequestReader(mockBufferedReader);
         RequestParser parser = new RequestParser(requestBuilder);
-        parser.reader = reader;
+        parser.reader = mockRequestReader;
         Request request = requestBuilder.build();
 
         parser.setHeaders();
 
+        assertTrue(mockRequestReader.wasReadLineCalled());
         assertEquals(expectedHeaders, request.headers);
     }
 
@@ -59,13 +62,14 @@ public class RequestParserTest {
         MockReader mockReader = new MockReader();
         MockBufferedReader mockBufferedReader = new MockBufferedReader(mockReader);
         mockBufferedReader.setReadLineValues(new String[] {"Content-Length: 0", DOUBLE_LINE_BREAK});
-        RequestReader reader = new RequestReader(mockBufferedReader);
+        MockRequestReader mockRequestReader = new MockRequestReader(mockBufferedReader);
         RequestParser parser = new RequestParser(requestBuilder);
-        parser.reader = reader;
+        parser.reader = mockRequestReader;
         Request request = requestBuilder.build();
 
         parser.setHeaders();
 
+        assertTrue(mockRequestReader.wasReadLineCalled());
         assertEquals(expectedHeaders, request.headers);
     }
 
@@ -76,13 +80,14 @@ public class RequestParserTest {
         MockReader mockReader = new MockReader();
         MockBufferedReader mockBufferedReader = new MockBufferedReader(mockReader);
         mockBufferedReader.setReadValues(requestBody);
-        RequestReader reader = new RequestReader(mockBufferedReader);
+        MockRequestReader mockRequestReader = new MockRequestReader(mockBufferedReader);
         RequestParser parser = new RequestParser(requestBuilder);
-        parser.reader = reader;
+        parser.reader = mockRequestReader;
 
         parser.setBody("9");
         Request request = requestBuilder.build();
 
+        assertTrue(mockRequestReader.wasReadCalled());
         assertEquals(requestBody, request.body);
     }
 
@@ -91,13 +96,14 @@ public class RequestParserTest {
         RequestBuilder requestBuilder = new RequestBuilder();
         MockReader mockReader = new MockReader();
         MockBufferedReader mockBufferedReader = new MockBufferedReader(mockReader);
-        RequestReader reader = new RequestReader(mockBufferedReader);
+        MockRequestReader mockRequestReader = new MockRequestReader(mockBufferedReader);
         RequestParser parser = new RequestParser(requestBuilder);
-        parser.reader = reader;
+        parser.reader = mockRequestReader;
 
         Request request = requestBuilder.build();
         parser.setBody("0");
 
+        assertFalse(mockRequestReader.wasReadCalled());
         assertEquals(null, request.body);
     }
 }
